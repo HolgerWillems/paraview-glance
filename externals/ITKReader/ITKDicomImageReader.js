@@ -29,8 +29,16 @@ function vtkITKDicomImageReader(publicAPI, model) {
     }
 
     model.files = files;
+    let promise = null;
+    
+    
+    if (files.length === 1) { 
+      promise = readImageFile(null, files[0]); // Single File DICOM
+    } else { 
+      promise = readImageDICOMFileSeries(null, files); // Multiple File DICOM
+    }
 
-    return readImageDICOMFileSeries(files)
+    return promise
       .then(({ image }) => {
         return image;
       })
